@@ -266,7 +266,15 @@ function AuthScreen({ onLogin, api, students, loadData }) {
       await loadData();
       onLogin({ role: "student", ...created });
     } catch (err) {
-      setError(err.response?.data?.error || "Registration failed. Email might already exist.");
+      try {
+        const fresh = await axios.get(`${api}/students`);
+        const existing = fresh.data.find(s => s.email.toLowerCase() === newStudent.email.trim().toLowerCase());
+        if (existing) {
+          onLogin({ role: "student", ...existing });
+          return;
+        }
+      } catch {}
+      setError(err.response?.data?.error || "Registration failed. Email might already exist. Click 'Sign in' below.");
     } finally {
       setLoading(false);
     }
@@ -333,6 +341,9 @@ function AuthScreen({ onLogin, api, students, loadData }) {
               <div className="demo-bar">
                 <b>💡 Quick Demo Sign In:</b>
                 <div className="demo-chips">
+                  <button type="button" onClick={() => { setStudentEmail("pramodreddymanda143@gmail.com"); handleStudentLogin(null, "pramodreddymanda143@gmail.com"); }}>
+                    Pramod (CSE, 8.5)
+                  </button>
                   <button type="button" onClick={() => { setStudentEmail("ananya@example.com"); handleStudentLogin(null, "ananya@example.com"); }}>
                     Ananya (CSE, 8.7)
                   </button>
