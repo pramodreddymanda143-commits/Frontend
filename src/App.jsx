@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./index.css";
 
-const API = import.meta.env.VITE_API_URL || "https://backend-0xdt.onrender.com/api";
+const API = import.meta.env.VITE_API_URL || (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1" ? "https://backend-0xdt.onrender.com/api" : "http://localhost:8080/api");
 const emptyStudent={name:"",email:"",branch:"CSE",cgpa:"",skills:""};
 const emptyCompany={name:"",email:"",industry:""};
 const emptyJob={title:"",branch:"Any",requiredSkills:"",minCgpa:"",openings:""};
